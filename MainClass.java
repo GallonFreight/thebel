@@ -1,19 +1,9 @@
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.LineUnavailableException;
-import javax.sound.sampled.SourceDataLine;
 
 
 public class MainClass {
 	
-	public static final byte[] rest = new byte[(int) (Bells.SECONDS * Bells.SAMPLE_RATE)];
-	
-	private static final int restLength = 30; // ms
-	
-	private static final int bellLength = 300;  // ms
-
-	private static Bells myBell1 = Bells.eleven, myBell2 = Bells.twelve;
-	
+	// an attempt at enumerating the quarks can be found in preTesting
 	private static int[][] up = { 
 		{3,12},
 		{1,2},
@@ -130,176 +120,36 @@ public class MainClass {
 		{5, 12},
 		{}
 	};
+
+	private static int[][][] composition =
+		{up, charm, top, charm, strange, down, top, strange};
 	
 	public static void main(String[] args) throws LineUnavailableException {
+		Belfry belfry = new Belfry(10, 205, 20, Bells.five, Bells.six);
+		// 1st arg is tickrate
 		
-		Listener listener = new Listener(10);
+		int startAfterLead = 0; // so the first however many quarks are not rung
 		
-		// setting up audio output
-		final AudioFormat af =
-			new AudioFormat(Bells.SAMPLE_RATE, 8, 1, true, true);
-	    SourceDataLine line = AudioSystem.getSourceDataLine(af);
-	    line.open(af, Bells.SAMPLE_RATE);
-	        
-		
-		Bells[] change = Bells.values();		
-		
-		int[] places;
-		
-		for(int[] row:up){			
-			for(Bells bell:change){
+		Bells[] change = Bells.values();
 				
-				
-
-//				if (bell != myBell1 && bell != myBell2){
-//					play(line, bell, bellLength); // making the bell noise
-//				} else line.write(rest, 0, bellLength);
-//        		line.write(rest, 0, restLength);
-				        		            
-				System.out.printf("%c", bell.getNumber()); // prints the current change
-			}	
-				
-			System.out.println(); // make sure to do this so as to get changes on separate lines
-			
-			places = row;// loads the place notation of the permutation to occur
 		
-			change = permute(change, places);			
+//		for(int[][] quark:composition){
+		for(int i = 0; i < composition.length; i++){
+			if(i == startAfterLead){
+				for(int j = 0; j < 3; j++) // to ring HBH(B) before the method begins
+					belfry.loadChange(change);
+				System.out.println("Go!");
+			}
+			for(int[] row:composition[i]){
+				if(i >= startAfterLead) belfry.loadChange(change); // plays the change
+				change = permute(change, row); // creates the next change from place notation
+			}
+			System.out.println(); // separates methods by a blank line
 		}
-		System.out.println("Charm!");
-		
-		for(int[] row:charm){			
-			for(Bells bell:change){
 
-				play(line, bell, bellLength); // making the bell noise
-        		int count = line.write(rest, 0, restLength);
-            
-				System.out.printf("%c", bell.getNumber()); // prints the current change
-			}	
-				
-			System.out.println(); // make sure to do this so as to get changes on separate lines
-			
-			places = row;// loads the place notation of the permutation to occur
+		belfry.loadChange(change);// to make sure it rings round at the end
 		
-			change = permute(change, places);			
-		}
-		System.out.println("Top!");
-		
-		for(int[] row:top){			
-			for(Bells bell:change){
-
-				play(line, bell, bellLength); // making the bell noise
-        		int count = line.write(rest, 0, restLength);
-        		
-				System.out.printf("%c", bell.getNumber()); // prints the current change
-			}	
-				
-			System.out.println(); // make sure to do this so as to get changes on separate lines
-			
-			places = row;// loads the place notation of the permutation to occur
-		
-			change = permute(change, places);			
-		}
-		System.out.println("Charm!");
-		
-		for(int[] row:charm){			
-			for(Bells bell:change){
-
-				play(line, bell, bellLength); // making the bell noise
-        		int count = line.write(rest, 0, restLength);
-        		
-				System.out.printf("%c", bell.getNumber()); // prints the current change
-			}	
-				
-			System.out.println(); // make sure to do this so as to get changes on separate lines
-			
-			places = row;// loads the place notation of the permutation to occur
-		
-			change = permute(change, places);			
-		}
-		System.out.println("Strange!");
-		
-		for(int[] row:strange){			
-			for(Bells bell:change){
-
-				play(line, bell, bellLength); // making the bell noise
-        		int count = line.write(rest, 0, restLength);
-        		
-				System.out.printf("%c", bell.getNumber()); // prints the current change
-			}	
-				
-			System.out.println(); // make sure to do this so as to get changes on separate lines
-			
-			places = row;// loads the place notation of the permutation to occur
-		
-			change = permute(change, places);			
-		}
-		System.out.println("Down!");
-		
-		for(int[] row:down){			
-			for(Bells bell:change){
-				
-
-				play(line, bell, bellLength); // making the bell noise
-        		int count = line.write(rest, 0, restLength);
-        		
-				System.out.printf("%c", bell.getNumber()); // prints the current change
-			}	
-				
-			System.out.println(); // make sure to do this so as to get changes on separate lines
-			
-			places = row;// loads the place notation of the permutation to occur
-		
-			change = permute(change, places);			
-		}
-		System.out.println("Top!");
-		
-		for(int[] row:top){			
-			for(Bells bell:change){
-				
-
-				play(line, bell, bellLength); // making the bell noise
-        		int count = line.write(rest, 0, restLength);
-        		
-				System.out.printf("%c", bell.getNumber()); // prints the current change
-			}	
-				
-			System.out.println(); // make sure to do this so as to get changes on separate lines
-			
-			places = row;// loads the place notation of the permutation to occur
-		
-			change = permute(change, places);			
-		}
-		System.out.println("Strange!");
-		
-		for(int[] row:strange){			
-			for(Bells bell:change){
-
-				play(line, bell, bellLength); // making the bell noise
-        		int count = line.write(rest, 0, restLength);
-        		
-				System.out.printf("%c", bell.getNumber()); // prints the current change
-			}	
-				
-			System.out.println(); // make sure to do this so as to get changes on separate lines
-			
-			places = row;// loads the place notation of the permutation to occur
-		
-			change = permute(change, places);			
-		}
-		
-		for(Bells bell:change){
-			
-
-			play(line, bell, bellLength); // making the bell noise
-    		int count = line.write(rest, 0, restLength);
-    		
-			System.out.printf("%c", bell.getNumber()); // prints the current change
-		}	
-			
-
-		line.drain();
-        line.close();
-				
+		belfry.die();
 	}
 	
 	
@@ -343,16 +193,5 @@ public class MainClass {
 		
 		return swapped;
 	}
-	
-	public static void rest(int ms){
-		
-	}
-	
-	
-	public static void play(SourceDataLine line, Bells note, int ms) {
-    	
-        ms = Math.min(ms, (int)Bells.SECONDS * 1000);
-        int length = Bells.SAMPLE_RATE * ms / 1000;
-        int count = line.write(note.getWave(), 0, length); // will only accept bytes(signed)
-    }
+
 }

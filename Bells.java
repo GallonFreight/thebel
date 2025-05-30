@@ -30,7 +30,9 @@ public enum Bells {
         for (int i = 0; i < wave.length; i++) {
             double period = (double)SAMPLE_RATE / fundamental;
             double angle = 2.0 * Math.PI * i / period;
-            wave[i] = (byte)(Math.sin(angle) * 127f); // * 127 to get from 0-1 to full range of byte
+            // add in exponential decay so it doesn't have such a big change when next note cuts in
+            // hopefully this will avoid clicking
+            wave[i] = (byte)(Math.sin(angle) * Math.exp(-angle/220.0) * 127f); // * 127 to get from 0-1 to full range of byte
         }
 		
 
