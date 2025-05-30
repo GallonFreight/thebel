@@ -1,40 +1,47 @@
 import javax.sound.sampled.LineUnavailableException;
-//This version of the beta was created to allow ringing just one bell on major
+//This version of the beta was created to allow ringing just one bell on minor
 
 public class MainClass {
 	
-	private static int[][] imogen = {
+	private static int[][] original = {
 		{},
-		{3, 8},
+		{1, 6},
 		{},
+		{1, 6},
+		{},
+		{1, 6},
+		{},
+		{1, 6},
+		{},
+		{1, 6},
+		{},
+		{1, 6}
+	};
+	
+	private static int[][] carlisle = {
+		{3, 4},
+		{},
+		{3, 6},
 		{1, 4},
 		{},
-		{1, 2, 5, 8},
-		{},
-		{1, 2, 3, 6},
-		{},
-		{1, 4},
-		{},
-		{1, 8},
-		{5, 6},
 		{1, 2},
+		{},
+		{3, 6},
+		{},
+		{1, 4},
+		{},
 		{5, 6},
-		{7, 8},
-		{5, 6},
+		{},
+		{1, 4},
+		{},
+		{3, 6},
+		{},
 		{1, 2},
-		{5, 6},
-		{1, 8},
 		{},
 		{1, 4},
+		{3, 6},
 		{},
-		{1, 2, 3, 6},
-		{},
-		{1, 2, 5, 8},
-		{},
-		{1, 4},
-		{},
-		{3, 8},
-		{}
+		{3, 4}
 	};
 
 	private static int[][] plain = {
@@ -50,13 +57,12 @@ public class MainClass {
 	};
 	
 	private static int[][][] composition =
-		{imogen, plain, imogen, plain, imogen, bob, imogen, plain, imogen, plain, imogen, bob, imogen, single, imogen, bob,
-			imogen, plain, imogen, plain, imogen, plain, imogen, plain, imogen, plain, imogen, plain, imogen, plain, imogen, plain, imogen, plain,
-			imogen, single, imogen, plain, imogen, plain, imogen, single};
+		{carlisle, plain, carlisle, plain, carlisle, plain, carlisle, bob, carlisle, plain, carlisle, plain, carlisle, single, carlisle, plain, carlisle, plain, carlisle, plain, carlisle, bob, carlisle, single, carlisle, bob, carlisle, single, carlisle, plain, carlisle, single, carlisle, plain};
 	// remember to end this with a plain to play the last change
 	
 	public static void main(String[] args) throws LineUnavailableException {
-		Belfry belfry = new Belfry(10, 180, 22, Bells.two);
+		Belfry belfry = new Belfry(10, 200, 33, Bells.four); //tickrate, bell length, rest length, my bell
+		// here, should read bells.two, but I messed it about because of pitches
 		
 		int startAfterLead = 0; // so the first however many quarks are not rung
 		// just keeping this in because I can't be bothered to take it out of the main loop

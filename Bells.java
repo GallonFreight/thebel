@@ -3,14 +3,14 @@ public enum Bells {
 	
 	// An enumeration of 12 bells, giving each a symbol and waveform
 	
-	one('1',392.00),
-	two('2',349.23),
-	three('3',329.63),
-	four('4',293.66),
-	five('5',261.63),
-	six('6',246.94),
-	seven('7',220.00),
-	eight('8',196.00);
+	// to make this sound better, I changed the pitches
+	
+	three('1',329.63),
+	four('2',293.66),
+	five('3',261.63),
+	six('4',246.94),
+	seven('5',220.00),
+	eight('6',196.00);
 	// to make it do major rather than maximus, I just commented out the rest. Hopefully this works!
 //	nine('9',174.61),
 //	ten('0',164.81),
@@ -26,6 +26,7 @@ public enum Bells {
     
     //Risset version is in preTesting package
 	Bells(char number, double fundamental){
+		// fundamental refers to fundamental note of each bell, not base of scale
 		this.number = number;
 
         for (int i = 0; i < wave.length; i++) {
