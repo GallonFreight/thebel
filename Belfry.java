@@ -27,8 +27,8 @@ public class Belfry implements ActionListener {
 	public final int tickLength;// of the timer
 	private int userTicksLeft; // how many ticks left before the current bell, or pause must stop
 	private int autoTicksLeft; // how many ticks left before the user's bell stops playing of its own accord
-	private final int bellTicks;
-	private final int restTicks;
+	private final int bellTicks; // number of ticks in a bell noise duration; also length of handstroke gap
+	private final int restTicks; // number of ticks in a rest between bell noises
 	private boolean waiting;
 	private boolean autoNoisePlaying; // says whether one of the non-user bells' waveforms is being played
 	
@@ -36,13 +36,13 @@ public class Belfry implements ActionListener {
 	
 	public JFrame frame;
 	
-	public final Bells myBell1, myBell2;
+	public final Bells myBell;
+	// got rid of other one to ring just one
 	
 	private boolean handstroke;
 	
-	public Belfry(int tickRate, int bellLength, int restLength, Bells myBell1, Bells myBell2) throws LineUnavailableException{
-		this.myBell1 = myBell1;
-		this.myBell2 = myBell2;
+	public Belfry(int tickRate, int bellLength, int restLength, Bells myBell) throws LineUnavailableException{
+		this.myBell = myBell;
 		handstroke = true;
 		
 		final AudioFormat af =
@@ -125,7 +125,8 @@ public class Belfry implements ActionListener {
 				}catch (InterruptedException e) {}				
 			}
 			
-			if((bell != myBell1) && (bell != myBell2)){
+			if(bell != myBell){
+			// changed from original beta to ring just one bell
 				playBell(bell);
 				userTicksLeft = -1; // in case a user bell has been interrupted
 									// so that its countdown cycle is rushed to finish and does not stop playback of non-user bell
@@ -134,7 +135,8 @@ public class Belfry implements ActionListener {
 			
 			autoTicksLeft = bellTicks; // leaves a bell-sized gap whether one is playing or not
 			waiting = true;
-			System.out.printf("%c", bell.getNumber()); // prints the current bell symbol
+			if(bell == myBell) System.out.printf("X");
+			else System.out.printf("%c", bell.getNumber()); // prints the current bell symbol
 			
 			while(waiting){// allows bell time to finish playing
 				try{
@@ -165,6 +167,8 @@ public class Belfry implements ActionListener {
         int length = Bells.SAMPLE_RATE * ms / 1000;
         line.write(bell.getWave(), 0, length); // will only accept bytes(signed)
 		// start the dataLine, and play the appropriate waveform
+        //TODO: not sure, but I think that speed is varying slightly
+        //TODO: also, sound sometimes cuts out without warning: don't know what's going on there!
 	}
 	
 	
@@ -174,14 +178,11 @@ public class Belfry implements ActionListener {
 		int key = e.getKeyCode();
 		
 		if(key == KeyEvent.VK_L){
-			playBell(myBell1);
-			userTicksLeft = bellTicks;
-			autoNoisePlaying = false;
-		}else if(key == KeyEvent.VK_S){
-			playBell(myBell2);
+			playBell(myBell);
 			userTicksLeft = bellTicks;
 			autoNoisePlaying = false;
 		}
+		// got rid of myBell2 here
 		
 		// when corresponding key is pressed, play of given bell is initiated
 		// userTicksLeft is set to bellTicks

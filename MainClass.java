@@ -1,150 +1,100 @@
 import javax.sound.sampled.LineUnavailableException;
-
+//This version of the beta was created to allow ringing just one bell on major
 
 public class MainClass {
 	
-	// an attempt at enumerating the quarks can be found in preTesting
-	private static int[][] up = { 
-		{3,12},
-		{1,2},
+	private static int[][] imogen = {
 		{},
-		{1,12},
+		{3, 8},
 		{},
-		{1,4},
-		{5,12},
+		{1, 4},
 		{},
-		{5,12},
-		{3,4},
-		{5,12},
+		{1, 2, 5, 8},
 		{},
-		{5,12},
-		{1,4},
+		{1, 2, 3, 6},
 		{},
-		{1,12},
+		{1, 4},
 		{},
-		{1,2},
-		{3,12},
-		{}		
+		{1, 8},
+		{5, 6},
+		{1, 2},
+		{5, 6},
+		{7, 8},
+		{5, 6},
+		{1, 2},
+		{5, 6},
+		{1, 8},
+		{},
+		{1, 4},
+		{},
+		{1, 2, 3, 6},
+		{},
+		{1, 2, 5, 8},
+		{},
+		{1, 4},
+		{},
+		{3, 8},
+		{}
+	};
+
+	private static int[][] plain = {
+		{1, 2}
 	};
 	
-	private static int[][] down = {
-		{1, 10},
-		{11, 12},
-		{},
-		{1, 12},
-		{},
-		{9, 12},
-		{1, 8},
-		{},
-		{1, 8},
-		{9, 10},
-		{1, 8},
-		{},
-		{1, 8},
-		{9, 12},
-		{},
-		{1, 12},
-		{},
-		{11, 12},
-		{1, 10},
-		{}
+	private static int[][] bob = {
+		{1, 4}
 	};
 	
-	private static int[][] charm = {
-		{7, 12},
-		{},
-		{7, 12},
-		{},
-		{1, 6, 7, 12},
-		{},
-		{1, 6, 7, 8},
-		{},
-		{1, 6, 7, 12},
-		{},
-		{7, 12},
-		{},
-		{7, 12},
-		{}
+	private static int[][] single = {
+		{1, 2, 3, 4}
 	};
-
-	private static int[][] strange = {
-		{5, 8},
-		{},
-		{5, 8},
-		{},
-		{5, 8},
-		{},
-		{1, 6, 7, 12},
-		{},
-		{1, 12},
-		{},
-		{1, 12},
-		{},
-		{1, 12},
-		{},
-		{1, 12},
-		{},
-		{1, 6, 7, 12},
-		{},
-		{5, 8},
-		{},
-		{5, 8},
-		{},
-		{5, 8},
-		{}
-	};
-
-	private static int[][] top = {
-		{5, 12},
-		{1, 4},
-		{},
-		{5, 12},
-		{},
-		{1, 2},
-		{},
-		{1, 4, 5, 12},
-		{},
-		{1, 4},
-		{5, 12},
-		{1, 4},
-		{5, 12},
-		{1, 4},
-		{},
-		{1, 4, 5, 12},
-		{},
-		{1, 2},
-		{},
-		{5, 12},
-		{},
-		{1, 4},
-		{5, 12},
-		{}
-	};
-
+	
 	private static int[][][] composition =
-		{up, charm, top, charm, strange, down, top, strange};
+		{imogen, plain, imogen, plain, imogen, bob, imogen, plain, imogen, plain, imogen, bob, imogen, single, imogen, bob,
+			imogen, plain, imogen, plain, imogen, plain, imogen, plain, imogen, plain, imogen, plain, imogen, plain, imogen, plain, imogen, plain,
+			imogen, single, imogen, plain, imogen, plain, imogen, single};
+	// remember to end this with a plain to play the last change
 	
 	public static void main(String[] args) throws LineUnavailableException {
-		Belfry belfry = new Belfry(10, 205, 20, Bells.five, Bells.six);
-		// 1st arg is tickrate
+		Belfry belfry = new Belfry(10, 180, 22, Bells.two);
 		
 		int startAfterLead = 0; // so the first however many quarks are not rung
+		// just keeping this in because I can't be bothered to take it out of the main loop
 		
 		Bells[] change = Bells.values();
-				
 		
-//		for(int[][] quark:composition){
 		for(int i = 0; i < composition.length; i++){
+		// iterates through each lead end			
+						
 			if(i == startAfterLead){
 				for(int j = 0; j < 3; j++) // to ring HBH(B) before the method begins
 					belfry.loadChange(change);
 				System.out.println("Go!");
 			}
-			for(int[] row:composition[i]){
+			for(int j = 0; j < composition[i].length; j++){
+			// iterates through every change in the lead
+				
+				
+				if(composition[i].length - j == 1){
+					
+					// automates conducting
+					try{
+						int[][] next = composition[i+1];
+						if(next == plain){
+							System.out.println("Lead End!");
+						}else if(next == bob){
+							System.out.println("Bob!");
+						}else if(next == single){
+							System.out.println("Single!");
+						}
+					}catch (ArrayIndexOutOfBoundsException e){
+						System.out.println("That's All!");					
+					}
+				}
 				if(i >= startAfterLead) belfry.loadChange(change); // plays the change
-				change = permute(change, row); // creates the next change from place notation
+				change = permute(change, composition[i][j]); // creates the next change from place notation
 			}
-			System.out.println(); // separates methods by a blank line
+			
 		}
 
 		belfry.loadChange(change);// to make sure it rings round at the end

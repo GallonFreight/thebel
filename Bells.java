@@ -10,11 +10,12 @@ public enum Bells {
 	five('5',261.63),
 	six('6',246.94),
 	seven('7',220.00),
-	eight('8',196.00),
-	nine('9',174.61),
-	ten('0',164.81),
-	eleven('E',146.83),
-	twelve('T',130.81);
+	eight('8',196.00);
+	// to make it do major rather than maximus, I just commented out the rest. Hopefully this works!
+//	nine('9',174.61),
+//	ten('0',164.81),
+//	eleven('E',146.83),
+//	twelve('T',130.81);
 	
 	private final char number;
 	public static final int SAMPLE_RATE = 16 * 1024; // ~16KHz
@@ -30,9 +31,7 @@ public enum Bells {
         for (int i = 0; i < wave.length; i++) {
             double period = (double)SAMPLE_RATE / fundamental;
             double angle = 2.0 * Math.PI * i / period;
-            // add in exponential decay so it doesn't have such a big change when next note cuts in
-            // hopefully this will avoid clicking
-            wave[i] = (byte)(Math.sin(angle) * Math.exp(-angle/220.0) * 127f); // * 127 to get from 0-1 to full range of byte
+            wave[i] = (byte)(Math.sin(angle) * 127f); // * 127 to get from 0-1 to full range of byte
         }
 		
 
