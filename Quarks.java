@@ -1,6 +1,6 @@
 
 public enum Quarks {
-	
+
 	up(new int[][]{
 		{3,12},
 		{1,2},
@@ -21,7 +21,7 @@ public enum Quarks {
 		{},
 		{1,2},
 		{3,12},
-		{}		
+		{}
 	}),
 
 	down(new int[][]{
@@ -63,7 +63,7 @@ public enum Quarks {
 		{7, 12},
 		{}
 	}),
-	
+
 	strange(new int[][]{
 		{5, 8},
 		{},
@@ -117,9 +117,9 @@ public enum Quarks {
 		{5, 12},
 		{}
 	});
-	
+
 	private final int[][] places;
-	
+
 	Quarks(int[][] places){
 		this.places = places;
 	}
