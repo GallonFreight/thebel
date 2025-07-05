@@ -1,7 +1,7 @@
 
 public enum Quarks {
 	
-	up({
+	up(new int[][]{
 		{3,12},
 		{1,2},
 		{},
@@ -23,8 +23,8 @@ public enum Quarks {
 		{3,12},
 		{}		
 	}),
-	
-	down( {
+
+	down(new int[][]{
 		{1, 10},
 		{11, 12},
 		{},
@@ -47,7 +47,7 @@ public enum Quarks {
 		{}
 	}),
 
-	charm( {
+	charm(new int[][]{
 		{7, 12},
 		{},
 		{7, 12},
@@ -64,7 +64,7 @@ public enum Quarks {
 		{}
 	}),
 	
-	strange( {
+	strange(new int[][]{
 		{5, 8},
 		{},
 		{5, 8},
@@ -91,7 +91,7 @@ public enum Quarks {
 		{}
 	}),
 
-	top( {
+	top(new int[][]{
 		{5, 12},
 		{1, 4},
 		{},
